@@ -1,12 +1,11 @@
 :root{
-  /* Base institucional (claro, sobrio) */
   --bg: #f5f6f7;
   --surface: #ffffff;
   --text: #1f2937;
   --muted: #6b7280;
   --border: #d1d5db;
 
-  /* Acento institucional (vino sobrio) */
+ 
   --accent: #7a1f3d;
   --accent-2: #a63a5f;
 
@@ -219,7 +218,7 @@ input:focus, select:focus, textarea:focus{
 }
 
 
-/* ===== Tablas (lista) ===== */
+
 table {
   width: 100%;
   border-collapse: separate;
@@ -230,34 +229,32 @@ th, td {
   vertical-align: top;
 }
 
-/* Columna de acciones: fija y compacta */
+
 td.actions, th.actions {
-  width: 170px;          /* ajusta 150-200 según te guste */
+  width: 170px;          
   text-align: right;
   white-space: nowrap;
 }
 
-/* Botones de acciones alineados horizontalmente */
+
 td.actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
 }
 
-/* Form inline para que no baje a otra línea */
+
 form.inline {
   display: inline;
   margin: 0;
 }
 
-/* Evita que "Clase" y "CURP" se rompan feo */
+
 td.curp, td.clase {
   white-space: nowrap;
 }
 
-/* Nombres: opcional, evita saltos (si quieres una fila más compacta) */
-/* td.nombre { white-space: nowrap; } */
-/* Contenedor principal */
+
 .dashboard-menu {
     display: flex;
     gap: 15px;
@@ -266,7 +263,7 @@ td.curp, td.clase {
     padding: 10px 0;
 }
 
-/* Mantenemos tu base .btn y solo personalizamos el contenedor del menú */
+
 .actions {
     display: flex;
     gap: 12px;
@@ -274,22 +271,20 @@ td.curp, td.clase {
     margin-top: 20px;
 }
 
-/* Personalización para los botones de navegación del Dashboard */
+
 .actions .btn {
-    min-width: 140px; /* Para que todos tengan el mismo ancho */
+    min-width: 140px; 
     font-weight: 500;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Efecto de elevación al pasar el mouse sin romper tu hover actual */
 .actions .btn:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     border-color: var(--accent);
 }
 
-/* Estilo específico para resaltar el botón de Estadísticas */
-/* Usamos tu clase 'primary' para que herede el color guinda/accent */
+
 .btn-stats.primary {
     box-shadow: 0 4px 6px rgba(128, 0, 0, 0.2);
 }

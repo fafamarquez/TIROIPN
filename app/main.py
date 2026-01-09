@@ -35,13 +35,9 @@ class Miembro(db.Model):
     __tablename__ = "miembros"
 
     miembro_id = db.Column(db.Integer, primary_key=True)
-
-
     nombre = db.Column(db.String(120), nullable=False)
     apellido_paterno = db.Column(db.String(80))
     apellido_materno = db.Column(db.String(80))
-
-   
     curp = db.Column(db.String(18), unique=True, nullable=False)
     correo = db.Column(db.String(120))
     celular = db.Column(db.String(20))
@@ -813,20 +809,25 @@ def create_app():
     @app.get("/dashboard")
     @login_required
     def dashboard():
+        # 1. SINCRONIZACIÓN AL DWH (Añadimos 'edad' para que funcionen las gráficas nuevas)
         db.session.execute(text("""
-            INSERT INTO dw.dim_miembros (miembro_id, nombre_completo, curp, es_atleta, es_coach)
+            INSERT INTO dw.dim_miembros (miembro_id, nombre_completo, curp, edad, es_atleta, es_coach)
             SELECT 
                 m.miembro_id, 
                 (m.nombre || ' ' || COALESCE(m.apellido_paterno, '')), 
                 m.curp,
+                m.edad, -- Sincronizamos la edad aquí
                 EXISTS(SELECT 1 FROM atletas a WHERE a.miembro_id = m.miembro_id),
                 EXISTS(SELECT 1 FROM coachs c WHERE c.miembro_id = m.miembro_id)
             FROM miembros m
             ON CONFLICT (miembro_id) DO UPDATE SET 
                 es_atleta = EXCLUDED.es_atleta,
-                es_coach = EXCLUDED.es_coach;
+                es_coach = EXCLUDED.es_coach,
+                edad = EXCLUDED.edad; -- Actualizamos la edad también
         """))
         db.session.commit() 
+
+        # Consultas originales
         niveles_query = db.session.execute(text("""
             SELECT a.nivel, COUNT(*) as total 
             FROM dw.dim_miembros m
@@ -841,6 +842,52 @@ def create_app():
             FROM dw.dim_miembros
         """)).mappings().first()
 
-        return render_template("dashboard.html", niveles=niveles_query, roles=roles_query)
+        # --- NUEVAS CONSULTAS ---
+        query_genero = text("""
+            SELECT 
+                CASE 
+                    WHEN SUBSTRING(curp, 11, 1) = 'H' THEN 'Hombres'
+                    WHEN SUBSTRING(curp, 11, 1) = 'M' THEN 'Mujeres'
+                    ELSE 'Otro'
+                END as etiqueta,
+                COUNT(*) as total
+            FROM dw.dim_miembros
+            WHERE es_atleta = TRUE
+            GROUP BY etiqueta
+        """)
+        res_genero = db.session.execute(query_genero).all()
 
+        query_edad = text("""
+            SELECT 
+                CASE 
+                    WHEN edad < 18 THEN 'Infantil'
+                    WHEN edad BETWEEN 18 AND 25 THEN 'Juvenil'
+                    WHEN edad BETWEEN 26 AND 40 THEN 'Adulto'
+                    ELSE 'Veterano'
+                END as etiqueta,
+                COUNT(*) as total
+            FROM dw.dim_miembros
+            WHERE es_atleta = TRUE
+            GROUP BY etiqueta
+            ORDER BY total DESC
+        """)
+        res_edad = db.session.execute(query_edad).all()
+
+        # --- PASO 2: FORMATEO DE LISTAS ---
+        labels_genero = [r.etiqueta for r in res_genero]
+        values_genero = [r.total for r in res_genero]
+
+        labels_edad = [r.etiqueta for r in res_edad]
+        values_edad = [r.total for r in res_edad]
+
+        # --- PASO 3: RETORNO CON TODAS LAS VARIABLES ---
+        return render_template(
+            "dashboard.html", 
+            niveles=niveles_query, 
+            roles=roles_query,
+            labels_genero=labels_genero, 
+            values_genero=values_genero,
+            labels_edad=labels_edad,
+            values_edad=values_edad
+        )
     return app

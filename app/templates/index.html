@@ -5,11 +5,11 @@
   <h1>Sistema del Club de Tiro con Arco IPN</h1>
   <p>Panel institucional de administración.</p>
 
-  <div class="actions">
-    <a class="btn" href="{{ url_for('list_coachs') }}">Coachs</a>
-    <a class="btn" href="{{ url_for('list_clases') }}">Clases</a>
-    <a class="btn" href="{{ url_for('list_atletas') }}">Atletas</a>
-    <a class="btn" href="{{ url_for('list_arcos') }}">Arcos</a>
-    <a class="btn" href="{{ url_for('dashboard') }}">Estadisticas</a>
-  </div>
+<div class="dashboard-menu">
+    <a class="btn btn-dash" href="{{ url_for('list_coachs') }}">Coachs</a>
+    <a class="btn btn-dash" href="{{ url_for('list_clases') }}">Clases</a>
+    <a class="btn btn-dash" href="{{ url_for('list_atletas') }}">Atletas</a>
+    <a class="btn btn-dash" href="{{ url_for('list_arcos') }}">Arcos</a>
+    <a class="btn btn-dash btn-stats" href="{{ url_for('dashboard') }}">Estadísticas</a>
+</div>
 {% endblock %}

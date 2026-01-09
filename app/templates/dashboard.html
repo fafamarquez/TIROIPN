@@ -27,12 +27,36 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Distribución por Género (DWH)</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartGenero"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Rangos de Edad (DWH)</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartEdad"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-
+    // 1. Gráfica de Niveles (Original)
     const ctxNiveles = document.getElementById('chartNiveles');
     new Chart(ctxNiveles, {
         type: 'bar',
@@ -46,7 +70,7 @@
         }
     });
 
-
+    // 2. Gráfica de Roles (Original)
     const ctxRoles = document.getElementById('chartRoles');
     new Chart(ctxRoles, {
         type: 'doughnut',
@@ -56,6 +80,43 @@
                 data: [{{ roles.atletas }}, {{ roles.coaches }}],
                 backgroundColor: ['#800000', '#575757']
             }]
+        }
+    });
+
+    // 3. Gráfica de Género (Nueva - DWH)
+    const ctxGenero = document.getElementById('chartGenero');
+    new Chart(ctxGenero, {
+        type: 'pie',
+        data: {
+            labels: {{ labels_genero|tojson }},
+            datasets: [{
+                data: {{ values_genero|tojson }},
+                backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56']
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // 4. Gráfica de Edad (Nueva - DWH)
+    const ctxEdad = document.getElementById('chartEdad');
+    new Chart(ctxEdad, {
+        type: 'bar',
+        data: {
+            labels: {{ labels_edad|tojson }},
+            datasets: [{
+                label: 'Atletas',
+                data: {{ values_edad|tojson }},
+                backgroundColor: '#4BC0C0'
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
         }
     });
 </script>
