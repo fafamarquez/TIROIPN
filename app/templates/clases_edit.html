@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Editar clase | Archery Club IPN{% endblock %}
+
+{% block content %}
+  <h1>Editar clase</h1>
+
+  <form method="post">
+    <div style="margin-bottom:10px;">
+      <label>Días</label><br/>
+      <input name="dias" value="{{ clase.dias or '' }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Hora inicio</label><br/>
+      <input name="hora_inicio" type="time" required value="{{ clase.hora_inicio }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Hora fin</label><br/>
+      <input name="hora_fin" type="time" required value="{{ clase.hora_fin }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Nivel</label><br/>
+      <select name="nivel">
+        <option value="Inicial" {% if clase.nivel == "Inicial" %}selected{% endif %}>Inicial</option>
+        <option value="Intermedio" {% if clase.nivel == "Intermedio" %}selected{% endif %}>Intermedio</option>
+        <option value="Avanzado" {% if clase.nivel == "Avanzado" %}selected{% endif %}>Avanzado</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Coach</label><br/>
+      <select name="coach_id" required>
+        {% for c in coachs %}
+          <option value="{{ c.miembro_id }}" {% if c.miembro_id == clase.coach_id %}selected{% endif %}>
+            Coach ID {{ c.miembro_id }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="submit">Guardar</button>
+      <a class="btn" href="{{ url_for('list_clases') }}">Cancelar</a>
+    </div>
+  </form>
+{% endblock %}

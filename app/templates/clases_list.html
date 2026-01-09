@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Clases | Archery Club IPN{% endblock %}
+
+{% block content %}
+  <h1>Clases</h1>
+
+  <div class="actions">
+    <a class="btn primary" href="{{ url_for('new_clase') }}">+ Nueva clase</a>
+  </div>
+
+  {% if clases %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Días</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Nivel</th>
+          <th>Coach ID</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for clase, coach, miembro in clases %}
+        <tr>
+            <td>{{ clase.clase_id }}</td>
+            <td>{{ clase.dias or "No asignado" }}</td>
+            {# Formateo de hora para que se vea limpio (HH:MM) #}
+            <td>{{ clase.hora_inicio.strftime('%H:%M') }}</td>
+            <td>{{ clase.hora_fin.strftime('%H:%M') }}</td>
+            <td>
+            <span class="badge-{{ clase.nivel|lower }}">
+                {{ clase.nivel }}
+            </span>
+            </td>
+            {# Aquí usamos el objeto miembro que viene en la tupla #}
+            <td>{{ miembro.nombre }} {{ miembro.apellido_paterno }}</td>
+            <td>
+            <div class="actions">
+                <a class="btn" href="{{ url_for('edit_clase', clase_id=clase.clase_id) }}">Editar</a>
+                
+                <form method="post" action="{{ url_for('delete_clase', clase_id=clase.clase_id) }}" style="display:inline;">
+                <button class="btn btn-danger" type="submit" onclick="return confirm('¿Eliminar clase?');">Eliminar</button>
+                </form>
+            </div>
+            </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay clases todavía.</p>
+  {% endif %}
+{% endblock %}

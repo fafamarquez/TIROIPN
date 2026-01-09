@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Arcos | Sistema - Club de Tiro con Arco IPN{% endblock %}
+
+{% block content %}
+  <h1>Arcos</h1>
+  <p>Registro y control de arcos asociados a miembros.</p>
+
+  <div class="actions">
+    <a class="btn primary" href="{{ url_for('new_arco') }}">+ Nuevo arco</a>
+  </div>
+
+  {% if arcos %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID Arco</th>
+          <th>Tipo</th>
+          <th>Libraje</th>
+          <th>Mano</th>
+          <th>Accesorios</th>
+          <th>Rama / Maneral</th>
+          <th>Miembro</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a, m in arcos %}
+          <tr>
+            <td>{{ a.arco_id }}</td>
+            <td>{{ a.tipo }}</td>
+            <td>{{ a.libraje }}</td>
+            <td>{{ a.mano }}</td>
+            <td>
+              {% if a.estabilizador %}Estabilizador{% endif %}
+              {% if a.estabilizador and a.mira %} • {% endif %}
+              {% if a.mira %}Mira{% endif %}
+              {% if not a.estabilizador and not a.mira %}—{% endif %}
+            </td>
+            <td>{{ (a.rama or "—") }} / {{ (a.maneral or "—") }}</td>
+            <td>
+              {{ (m.nombre ~ ' ' ~ (m.apellido_paterno or '') ~ ' ' ~ (m.apellido_materno or '')).strip() }}
+              <br><small>ID {{ m.miembro_id }} • {{ m.curp }}</small>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay arcos registrados todavía.</p>
+  {% endif %}
+{% endblock %}

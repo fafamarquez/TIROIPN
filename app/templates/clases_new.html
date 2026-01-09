@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Nueva clase | Archery Club IPN{% endblock %}
+
+{% block content %}
+  <h1>Nueva clase</h1>
+
+  {% if not coachs %}
+    <p>No hay coachs. Primero crea un coach para poder asignarlo a una clase.</p>
+    <a class="btn" href="{{ url_for('new_coach') }}">Ir a crear coach</a>
+  {% else %}
+    <form method="post">
+      <div style="margin-bottom:10px;">
+        <label>Días (ej: Lun-Mie-Vie)</label><br/>
+        <input name="dias" type="text" maxlength="40" style="width: 360px; padding:8px;">
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Hora inicio *</label><br/>
+        <input name="hora_inicio" type="time" required style="width: 180px; padding:8px;">
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Hora fin *</label><br/>
+        <input name="hora_fin" type="time" required style="width: 180px; padding:8px;">
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Nivel *</label><br/>
+        <select name="nivel" style="width: 200px; padding:8px;">
+          <option value="Inicial">Inicial</option>
+          <option value="Intermedio">Intermedio</option>
+          <option value="Avanzado">Avanzado</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Coach *</label><br/>
+        <select name="coach_id" required style="width: 360px; padding:8px;">
+          <option value="">-- Selecciona --</option>
+          {% for c, m in coachs %}
+            <option value="{{ c.miembro_id }}">
+              {{ (m.nombre ~ ' ' ~ (m.apellido_paterno or '') ~ ' ' ~ (m.apellido_materno or '')).strip() }} (ID {{ c.miembro_id }})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button class="btn" type="submit">Guardar</button>
+      <a class="btn" href="{{ url_for('list_clases') }}">Cancelar</a>
+    </form>
+  {% endif %}
+{% endblock %}

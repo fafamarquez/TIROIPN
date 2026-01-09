@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Coachs | Archery Club IPN{% endblock %}
+
+{% block content %}
+  <h1>Coachs</h1>
+
+  <div class="actions">
+    <a class="btn primary" href="{{ url_for('new_coach') }}">+ Nuevo coach</a>
+  </div>
+
+  {% if coachs %}
+    <table>
+      <thead>
+        <tr>
+          <th>Miembro ID</th>
+          <th>Nombre</th>
+          <th>CURP</th>
+          <th>Correo</th>
+          <th>Celular</th>
+          <th>Edad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c, m in coachs %}
+          <tr>
+            <td>{{ m.miembro_id }}</td>
+            <td>{{ (m.nombre ~ ' ' ~ (m.apellido_paterno or '') ~ ' ' ~ (m.apellido_materno or '')).strip() }}</td>
+            <td>{{ m.curp }}</td>
+            <td>{{ m.correo or "" }}</td>
+            <td>{{ m.celular or "" }}</td>
+            <td>{{ m.edad or "" }}</td>
+
+            <td>
+              <a class="btn" href="{{ url_for('edit_coach', miembro_id=m.miembro_id) }}">Editar</a>
+
+              <form method="post"
+                    action="{{ url_for('delete_coach', miembro_id=m.miembro_id) }}"
+                    style="display:inline;">
+                <button class="btn"
+                        type="submit"
+                        onclick="return confirm('¿Eliminar rol coach?');">
+                  Eliminar
+                </button>
+              </form>
+            </td>
+
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay coachs todavía. Crea el primero.</p>
+    <div class="actions">
+      <a class="btn primary" href="{{ url_for('new_coach') }}">+ Nuevo coach</a>
+    </div>
+  {% endif %}
+{% endblock %}

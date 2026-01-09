@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Editar coach | Archery Club IPN{% endblock %}
+
+{% block content %}
+  <h1>Editar coach</h1>
+
+  <form method="post">
+    <div style="margin-bottom:10px;">
+      <label>Nombre</label><br/>
+      <input name="nombre" required value="{{ miembro.nombre or '' }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Apellido paterno</label><br/>
+      <input name="apellido_paterno" value="{{ miembro.apellido_paterno or '' }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Apellido materno</label><br/>
+      <input name="apellido_materno" value="{{ miembro.apellido_materno or '' }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>CURP</label><br/>
+      <input value="{{ miembro.curp }}" disabled>
+      <small style="display:block; opacity:.7;">La CURP no se edita (es única).</small>
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Correo</label><br/>
+      <input name="correo" value="{{ miembro.correo or '' }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Celular</label><br/>
+      <input name="celular" value="{{ miembro.celular or '' }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Edad</label><br/>
+      <input name="edad" type="number" min="8" max="90" value="{{ miembro.edad or '' }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Alergias</label><br/>
+      <textarea name="alergias" rows="3">{{ miembro.alergias or '' }}</textarea>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="submit">Guardar</button>
+      <a class="btn" href="{{ url_for('list_coachs') }}">Cancelar</a>
+    </div>
+  </form>
+{% endblock %}

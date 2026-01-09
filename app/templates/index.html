@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Inicio | Sistema - Club de Tiro con Arco IPN{% endblock %}
+
+{% block content %}
+  <h1>Sistema del Club de Tiro con Arco IPN</h1>
+  <p>Panel institucional de administración.</p>
+
+  <div class="actions">
+    <a class="btn" href="{{ url_for('list_coachs') }}">Coachs</a>
+    <a class="btn" href="{{ url_for('list_clases') }}">Clases</a>
+    <a class="btn" href="{{ url_for('list_atletas') }}">Atletas</a>
+    <a class="btn" href="{{ url_for('list_arcos') }}">Arcos</a>
+    <a class="btn" href="{{ url_for('dashboard') }}">Estadisticas</a>
+  </div>
+{% endblock %}

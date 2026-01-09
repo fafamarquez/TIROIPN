@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Nuevo coach | Archery Club IPN{% endblock %}
+
+{% block content %}
+  <h1>Nuevo coach</h1>
+
+  <form method="post">
+    <div style="margin-bottom:10px;">
+      <label>Nombre *</label><br/>
+      <input name="nombre" type="text" required maxlength="120" style="width: 360px; padding:8px;">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Apellido paterno</label><br/>
+      <input name="apellido_paterno" type="text" maxlength="80" style="width: 360px; padding:8px;">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Apellido materno</label><br/>
+      <input name="apellido_materno" type="text" maxlength="80" style="width: 360px; padding:8px;">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>CURP *</label><br/>
+      <input name="curp" type="text" required maxlength="18" style="width: 360px; padding:8px;">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Correo</label><br/>
+      <input name="correo" type="email" maxlength="120" style="width: 360px; padding:8px;">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Celular (10 dígitos)</label><br/>
+      <input name="celular" type="text" maxlength="20" style="width: 360px; padding:8px;">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Edad</label><br/>
+      <input name="edad" type="number" min="8" max="90" style="width: 140px; padding:8px;">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Alergias</label><br/>
+      <textarea name="alergias" rows="3" style="width: 360px; padding:8px;"></textarea>
+    </div>
+
+    <button class="btn" type="submit">Guardar</button>
+    <a class="btn" href="{{ url_for('list_coachs') }}">Cancelar</a>
+  </form>
+{% endblock %}

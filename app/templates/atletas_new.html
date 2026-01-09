@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Nuevo atleta | Sistema - Club de Tiro con Arco IPN{% endblock %}
+
+{% block content %}
+  <h1>Nuevo atleta</h1>
+  <p>Registro de atleta (miembro + rol atleta).</p>
+
+  <form method="post">
+
+    <h2>Datos del miembro</h2>
+
+    <div style="margin-bottom:10px;">
+      <label>Nombre *</label><br/>
+      <input name="nombre" type="text" required maxlength="120" value="{{ request.form.get('nombre','') }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Apellido paterno</label><br/>
+      <input name="apellido_paterno" type="text" maxlength="80" value="{{ request.form.get('apellido_paterno','') }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Apellido materno</label><br/>
+      <input name="apellido_materno" type="text" maxlength="80" value="{{ request.form.get('apellido_materno','') }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>CURP *</label><br/>
+      <input name="curp" type="text" required maxlength="18" value="{{ request.form.get('curp','') }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Correo</label><br/>
+      <input name="correo" type="email" maxlength="120" value="{{ request.form.get('correo','') }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Celular (10 dígitos)</label><br/>
+      <input name="celular" type="text" maxlength="20" value="{{ request.form.get('celular','') }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Edad</label><br/>
+      <input name="edad" type="number" min="8" max="90" style="max-width:160px;" value="{{ request.form.get('edad','') }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Alergias</label><br/>
+      <textarea name="alergias" rows="3">{{ request.form.get('alergias','') }}</textarea>
+    </div>
+
+    <h2>Datos del atleta</h2>
+
+    <div style="margin-bottom:10px;">
+      <label>¿Alumno IPN?</label>
+      <input name="alumno_ipn" type="checkbox" {% if request.form.get('alumno_ipn') %}checked{% endif %}>
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Boleta (obligatoria si es alumno IPN)</label><br/>
+      <input name="boleta" type="text" maxlength="20" value="{{ request.form.get('boleta','') }}">
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Nivel *</label><br/>
+      <select name="nivel" id="nivel" required style="max-width:240px;">
+        <option value="Inicial" {% if (nivel_sel or request.form.get('nivel','Inicial'))=='Inicial' %}selected{% endif %}>Inicial</option>
+        <option value="Intermedio" {% if (nivel_sel or request.form.get('nivel','Inicial'))=='Intermedio' %}selected{% endif %}>Intermedio</option>
+        <option value="Avanzado" {% if (nivel_sel or request.form.get('nivel','Inicial'))=='Avanzado' %}selected{% endif %}>Avanzado</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:10px;">
+      <label>Clase *</label><br/>
+      <select name="clase_id" id="clase_id" required style="max-width:460px;">
+        <option value="">Selecciona un nivel...</option>
+      </select>
+      <small style="display:block; opacity:.7; margin-top:6px;">
+        Solo se muestran clases que coinciden con el nivel.
+      </small>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="submit">Guardar</button>
+      <a class="btn" href="{{ url_for('list_atletas') }}">Cancelar</a>
+    </div>
+
+  </form>
+
+  <script>
+    async function cargarClases() {
+      const nivel = document.getElementById("nivel").value;
+      const sel = document.getElementById("clase_id");
+
+      sel.innerHTML = `<option value="">Cargando...</option>`;
+
+      try {
+        const r = await fetch(`/api/clases?nivel=${encodeURIComponent(nivel)}`);
+        const data = await r.json();
+
+        if (!data.ok) {
+          sel.innerHTML = `<option value="">No se pudieron cargar clases</option>`;
+          return;
+        }
+
+        if (data.items.length === 0) {
+          sel.innerHTML = `<option value="">No hay clases para ese nivel</option>`;
+          return;
+        }
+
+        sel.innerHTML = `<option value="">-- Selecciona --</option>`;
+        for (const it of data.items) {
+          const opt = document.createElement("option");
+          opt.value = it.clase_id;
+          opt.textContent = it.label;
+          sel.appendChild(opt);
+        }
+
+        // Si venías de un POST fallido, intenta re-seleccionar la clase que ya habías elegido
+        const prev = "{{ request.form.get('clase_id','') }}";
+        if (prev) sel.value = prev;
+
+      } catch (e) {
+        sel.innerHTML = `<option value="">Error cargando clases</option>`;
+      }
+    }
+
+    document.getElementById("nivel").addEventListener("change", cargarClases);
+    window.addEventListener("DOMContentLoaded", cargarClases);
+  </script>
+{% endblock %}

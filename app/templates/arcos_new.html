@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Nuevo arco | Sistema - Club de Tiro con Arco IPN{% endblock %}
+
+{% block content %}
+  <h1>Nuevo arco</h1>
+  <p>Registro de arco asociado a un miembro.</p>
+
+  {% if not miembros %}
+    <p>No hay miembros registrados. Primero registra un coach o atleta.</p>
+    <div class="actions">
+      <a class="btn primary" href="{{ url_for('new_coach') }}">Crear coach</a>
+      <a class="btn" href="{{ url_for('new_atleta') }}">Crear atleta</a>
+    </div>
+  {% else %}
+    <form method="post">
+
+      <div style="margin-bottom:10px;">
+        <label>Miembro *</label><br/>
+        <select name="miembro_id" required style="max-width:460px;">
+          <option value="">-- Selecciona --</option>
+          {% for m in miembros %}
+            <option value="{{ m.miembro_id }}">
+              {{ (m.nombre ~ ' ' ~ (m.apellido_paterno or '') ~ ' ' ~ (m.apellido_materno or '')).strip() }}
+              • ID {{ m.miembro_id }} • {{ m.curp }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Tipo *</label><br/>
+        <select name="tipo" style="max-width:240px;">
+          <option value="recurvo">recurvo</option>
+          <option value="compuesto">compuesto</option>
+          <option value="barebow">barebow</option>
+          <option value="tradicional">tradicional</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Libraje (10–70) *</label><br/>
+        <input name="libraje" type="number" min="10" max="70" required style="max-width:200px;">
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Mano *</label><br/>
+        <select name="mano" style="max-width:240px;">
+          <option value="diestro">diestro</option>
+          <option value="zurdo">zurdo</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Accesorios</label><br/>
+        <label><input type="checkbox" name="estabilizador"> Estabilizador</label>
+        &nbsp;&nbsp;
+        <label><input type="checkbox" name="mira"> Mira</label>
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Rama</label><br/>
+        <input name="rama" type="text" maxlength="40">
+      </div>
+
+      <div style="margin-bottom:10px;">
+        <label>Maneral</label><br/>
+        <input name="maneral" type="text" maxlength="40">
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" type="submit">Guardar</button>
+        <a class="btn" href="{{ url_for('list_arcos') }}">Cancelar</a>
+      </div>
+
+    </form>
+  {% endif %}
+{% endblock %}

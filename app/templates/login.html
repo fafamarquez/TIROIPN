@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Login | Sistema - Club de Tiro con Arco IPN{% endblock %}
+
+{% block content %}
+<div class="login-wrapper" style="display: flex; align-items: center; justify-content: space-between; gap: 40px; background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    
+    <div class="login-form" style="flex: 1;">
+        <h1 style="color: var(--accent); margin-top: 0;">Acceso</h1>
+
+
+        <form method="post">
+            <div style="margin-bottom:15px;">
+                <label style="font-weight: 600;">Usuario</label><br/>
+                <input name="username" required maxlength="60" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+            </div>
+
+            <div style="margin-bottom:20px;">
+                <label style="font-weight: 600;">Contraseña</label><br/>
+                <input name="password" type="password" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+            </div>
+
+            <div class="actions">
+                <button class="btn primary" type="submit" style="width: 100%; padding: 12px;">Entrar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="login-logo" style="flex: 1; text-align: center; border-left: 1px solid #eee; padding-left: 40px;">
+        <img src="{{ url_for('static', filename='img/tiro_ipn.jpg') }}" 
+             alt="Logo Tiro con Arco" 
+             style="max-width: 100%; height: auto; max-height: 280px; border-radius: 50%;">
+    </div>
+
+</div>
+{% endblock %}

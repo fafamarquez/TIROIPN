@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">Dashboard Institucional - Análisis DWH</h2>
+    <hr>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Alumnos por Nivel</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartNiveles"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Composición del Club</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="chartRoles"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    const ctxNiveles = document.getElementById('chartNiveles');
+    new Chart(ctxNiveles, {
+        type: 'bar',
+        data: {
+            labels: [{% for n in niveles %}'{{ n.nivel }}',{% endfor %}],
+            datasets: [{
+                label: 'Cantidad de Alumnos',
+                data: [{% for n in niveles %}{{ n.total }},{% endfor %}],
+                backgroundColor: ['#800000', '#D3D3D3', '#A9A9A9'] 
+            }]
+        }
+    });
+
+
+    const ctxRoles = document.getElementById('chartRoles');
+    new Chart(ctxRoles, {
+        type: 'doughnut',
+        data: {
+            labels: ['Atletas', 'Coaches'],
+            datasets: [{
+                data: [{{ roles.atletas }}, {{ roles.coaches }}],
+                backgroundColor: ['#800000', '#575757']
+            }]
+        }
+    });
+</script>
+{% endblock %}

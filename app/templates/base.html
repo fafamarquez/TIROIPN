@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Sistema - Club de Tiro con Arco IPN{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a class="brand" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='img/ipn_logo.jpg') }}" alt="IPN">
+        <div class="brand-title">
+          <b>Sistema de control deportivo</b>
+          <span>Club de Tiro con Arco • Instituto Politécnico Nacional</span>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="{{ url_for('index') }}">Inicio</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}" style="font-weight: bold; color: #800000;">Cerrar sesión</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card">
+      {% block content %}{% endblock %}
+    </div>
+
+    <div class="footer">
+      Sistema interno académico • IPN • Uso institucional
+    </div>
+  </main>
+
+</body>
+</html>

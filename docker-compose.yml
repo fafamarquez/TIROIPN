@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: archery_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: archery_db
+      POSTGRES_USER: archery_user
+      POSTGRES_PASSWORD: Archery123!
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./data/sql/ddl:/docker-entrypoint-initdb.d:ro
+
+  app:
+    build: .
+    container_name: archery_app
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: archery_db
+      DB_USER: archery_user
+      DB_PASSWORD: archery_pass
+      NIVEL_POBLADO: moderado
+
+volumes:
+  pgdata:

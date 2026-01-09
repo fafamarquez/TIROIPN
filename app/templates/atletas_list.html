@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Atletas | Sistema - Club de Tiro con Arco IPN{% endblock %}
+
+{% block content %}
+  <h1>Atletas</h1>
+  <p>Gestión de atletas registrados.</p>
+
+  <div class="actions">
+    <a class="btn primary" href="{{ url_for('new_atleta') }}">+ Nuevo atleta</a>
+  </div>
+
+  {% if atletas %}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>CURP</th>
+          <th>Alumno IPN</th>
+          <th>Boleta</th>
+          <th>Clase</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a, m, c in atletas %}
+        <tr>
+            <td>{{ m.miembro_id }}</td>
+            {# Concatenación limpia de nombre completo #}
+            <td>{{ (m.nombre ~ ' ' ~ (m.apellido_paterno or '') ~ ' ' ~ (m.apellido_materno or '')).strip() }}</td>
+            <td><code>{{ m.curp }}</code></td>
+            <td>
+            <span class="badge {{ 'ipn' if a.alumno_ipn else 'externo' }}">
+                {{ "Sí" if a.alumno_ipn else "No" }}
+            </span>
+            </td>
+            <td>{{ a.boleta or "---" }}</td>
+            {# Datos de la Clase (con validación de existencia) #}
+            <td>
+            {% if c %}
+                {{ c.nivel }} <br>
+                <small>{{ c.dias or "" }} • {{ c.hora_inicio.strftime("%H:%M") }}-{{ c.hora_fin.strftime("%H:%M") }}</small>
+            {% else %}
+                <span class="text-danger">Sin clase asignada</span>
+            {% endif %}
+            </td>
+            <td>
+            <div class="actions">
+                <a class="btn" href="{{ url_for('edit_atleta', miembro_id=m.miembro_id) }}">Editar</a>
+                <form method="post" action="{{ url_for('delete_atleta', miembro_id=m.miembro_id) }}" style="display:inline;">
+                <button class="btn btn-danger" type="submit" onclick="return confirm('¿Eliminar atleta?');">Eliminar</button>
+                </form>
+            </div>
+            </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay atletas todavía.</p>
+  {% endif %}
+{% endblock %}
