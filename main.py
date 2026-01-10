@@ -197,7 +197,7 @@ def create_app():
         return redirect(url_for("login"))
 
     @app.get("/")
-    @login_required
+    #@login_required
     def index():
         return render_template("index.html")
 
