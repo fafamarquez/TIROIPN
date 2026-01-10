@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto 19 - Demo Estática</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --accent: #800000; --bg: #f5f6f7; }
+        body { background-color: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar { background-color: white; border-bottom: 2px solid var(--accent); }
+        .card { border: none; border-radius: 15px; }
+        .btn-dash { background-color: white; border: 2px solid #ddd; padding: 20px; border-radius: 12px; transition: 0.3s; text-decoration: none; color: #333; font-weight: bold; display: block; text-align: center; }
+        .btn-dash:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#" onclick="showSection('menu')">🏹 Sistema IPN</a>
+        <div class="ms-auto">
+            <button class="btn btn-link text-dark text-decoration-none" onclick="showSection('menu')">Inicio</button>
+            <button class="btn btn-outline-danger btn-sm" onclick="alert('Sesión cerrada (Demo)')">Cerrar sesión</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    
+    <div id="menu" class="section active">
+        <div class="text-center mb-5">
+            <h1>Sistema del Club de Tiro con Arco IPN</h1>
+            <p class="text-muted">Panel institucional de administración (Versión Demo Estática)</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4"><a href="#" class="btn-dash" onclick="showSection('atletas')">👥 Atletas</a></div>
+            <div class="col-md-4"><a href="#" class="btn-dash" onclick="showSection('coachs')">👔 Coachs</a></div>
+            <div class="col-md-4"><a href="#" class="btn-dash" onclick="showSection('clases')">📚 Clases</a></div>
+            <div class="col-md-4"><a href="#" class="btn-dash" onclick="showSection('arcos')">🏹 Arcos</a></div>
+            <div class="col-md-4"><a href="#" class="btn-dash" onclick="showSection('dashboard')">📊 Estadísticas</a></div>
+        </div>
+    </div>
+
+    <div id="atletas" class="section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Lista de Atletas</h2>
+            <button class="btn btn-dark" onclick="showSection('menu')">Volver</button>
+        </div>
+        <div class="card shadow p-4">
+            <table class="table table-hover">
+                <thead><tr><th>Nombre</th><th>CURP</th><th>Nivel</th></tr></thead>
+                <tbody>
+                    <tr><td>Jorge Rafael Marquez</td><td>MARJ000000HDFRRR01</td><td>Intermedio</td></tr>
+                    <tr><td>Liz Marquez</td><td>MARL000000MDFRRR02</td><td>Avanzado</td></tr>
+                    <tr><td>Benito Can</td><td>BEN000000HDFRRR03</td><td>Inicial</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="dashboard" class="section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Dashboard Institucional - Análisis DWH</h2>
+            <button class="btn btn-dark" onclick="showSection('menu')">Volver</button>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-4"><div class="card shadow p-3"><h6 class="fw-bold text-primary">Alumnos por Nivel</h6><canvas id="chartNiveles"></canvas></div></div>
+            <div class="col-md-6 mb-4"><div class="card shadow p-3"><h6 class="fw-bold text-primary">Composición del Club</h6><canvas id="chartRoles"></canvas></div></div>
+            <div class="col-md-6 mb-4"><div class="card shadow p-3"><h6 class="fw-bold text-primary">Género (DWH)</h6><canvas id="chartGenero"></canvas></div></div>
+            <div class="col-md-6 mb-4"><div class="card shadow p-3"><h6 class="fw-bold text-primary">Edad (DWH)</h6><canvas id="chartEdad"></canvas></div></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Función para "navegar" entre secciones
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(id === 'dashboard') renderCharts();
+    }
+
+    // Renderizar gráficas con datos quemados (idénticos a tu DWH)
+    function renderCharts() {
+        new Chart(document.getElementById('chartNiveles'), {
+            type: 'bar',
+            data: { labels: ['Intermedio', 'Avanzado', 'Inicial'], datasets: [{ label: 'Alumnos', data: [55, 47, 48], backgroundColor: ['#800000', '#D3D3D3', '#A9A9A9'] }] }
+        });
+        new Chart(document.getElementById('chartRoles'), {
+            type: 'doughnut',
+            data: { labels: ['Atletas', 'Coaches'], datasets: [{ data: [150, 2], backgroundColor: ['#800000', '#575757'] }] }
+        });
+        new Chart(document.getElementById('chartGenero'), {
+            type: 'pie',
+            data: { labels: ['Hombres', 'Mujeres'], datasets: [{ data: [82, 68], backgroundColor: ['#36A2EB', '#FF6384'] }] }
+        });
+        new Chart(document.getElementById('chartEdad'), {
+            type: 'bar',
+            data: { labels: ['Infantil', 'Juvenil', 'Adulto', 'Veterano'], datasets: [{ label: 'Atletas', data: [20, 75, 40, 15], backgroundColor: '#4BC0C0' }] }
+        });
+    }
+</script>
+</body>
+</html>
